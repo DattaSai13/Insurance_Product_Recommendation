@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index():
-    logging.debug("Serving index.html")
+    logging.debug("Serving index.html (legacy)")
     return render_template('index.html')
 
 @app.route('/api/recommend', methods=['POST'])
@@ -41,6 +41,9 @@ def recommend():
 
         logging.debug("Preprocessing data")
         customers_df, products_df = preprocessor.preprocess(customers_df, products_df)
+        logging.debug(f"Preprocessed customers: {customers_df.head().to_dict()}")
+        logging.debug(f"Preprocessed products: {products_df.head().to_dict()}")
+
         logging.debug("Initializing needs assessor and recommender")
         needs_assessor = NeedsAssessor(products_df=products_df)
         recommender = Recommender(customers_df=customers_df, products_df=products_df)
@@ -72,7 +75,7 @@ def recommend():
         logging.debug(f"Needs: {needs}")
         recommendations = recommender.get_recommendations(customer_id, needs, life_stage, life_event_weight)
         if not recommendations:
-            logging.error(f"No recommendations generated for customer {customer_id}")
+            logging.error(f"No recommendations generated for customer {customer_id}. Needs: {needs}, Products coverage: {products_df['coverage_type'].unique()}")
             return jsonify({'error': f'No recommendations generated for customer {customer_id}'}), 500
         logging.debug(f"Recommendations: {recommendations}")
         chart_data = visualizer.generate_chart_data(recommendations, customer_id, products_df)
@@ -98,4 +101,5 @@ def favicon():
     return send_from_directory('static', 'favicon.ico')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Bind to 0.0.0.0 to ensure accessibility
+    app.run(debug=True, host='0.0.0.0', port=5000)

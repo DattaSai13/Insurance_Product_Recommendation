@@ -1,34 +1,46 @@
-from sklearn.preprocessing import StandardScaler
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 import logging
 
 class Preprocessor:
-    def __init__(self):
-        self.scaler = StandardScaler()
-
     def preprocess(self, customers_df, products_df):
-        """Preprocess customer and product data"""
         try:
-            # Encode categorical variables
-            customers_df['marital_status_code'] = customers_df['marital_status'].map({
+            # Handle missing values
+            customers_df = customers_df.fillna({
+                'income': customers_df['income'].mean(),
+                'health_condition': 'Average',
+                'risk_tolerance': 'Medium',
+                'recent_life_event': 'None'
+            })
+            products_df = products_df.fillna({
+                'premium': products_df['premium'].mean(),
+                'risk_level': 'Medium',
+                'coverage_limit': products_df['coverage_limit'].mean()
+            })
+
+            # Encode categorical variables consistently
+            customers_df['marital_status'] = customers_df['marital_status'].map({
                 'Single': 0, 'Married': 1, 'Divorced': 2
             })
-            customers_df['health_condition_code'] = customers_df['health_condition'].map({
-                'Good': 2, 'Average': 1, 'Poor': 0
+            customers_df['health_condition'] = customers_df['health_condition'].map({
+                'Good': 0, 'Average': 1, 'Poor': 2
             })
-            customers_df['risk_tolerance_code'] = customers_df['risk_tolerance'].map({
-                'High': 2, 'Medium': 1, 'Low': 0
+            customers_df['risk_tolerance'] = customers_df['risk_tolerance'].map({
+                'Low': 0, 'Medium': 1, 'High': 2
             })
-            customers_df['life_event_code'] = customers_df['recent_life_event'].map({
-                'None': 0, 'Marriage': 1, 'New Child': 2, 'Job Change': 3, 'Retirement': 4
+            products_df['risk_level'] = products_df['risk_level'].map({
+                'Low': 0, 'Medium': 1, 'High': 2
             })
+            # Keep coverage_type as strings to match needs_assessor
+            products_df['coverage_type'] = products_df['coverage_type'].astype(str)
 
             # Scale numerical features
-            numerical_features = ['age', 'income']
-            customers_df[numerical_features] = self.scaler.fit_transform(customers_df[numerical_features])
-            
-            logging.info("Data preprocessing completed")
+            scaler = StandardScaler()
+            customers_df[['age', 'income']] = scaler.fit_transform(customers_df[['age', 'income']])
+            products_df[['premium', 'coverage_limit']] = scaler.fit_transform(products_df[['premium', 'coverage_limit']])
+
+            logging.debug("Data preprocessing completed")
             return customers_df, products_df
         except Exception as e:
-            logging.error(f"Error in preprocessing: {e}")
+            logging.error(f"Error in preprocessing: {str(e)}")
             raise
