@@ -22,6 +22,9 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Flask API URL (replace with your Render-hosted Flask API URL)
+FLASK_API_URL = "https://your-flask-app.onrender.com/api/recommend"
+
 # Title
 st.title("Insurance Product Recommender")
 
@@ -29,14 +32,14 @@ st.title("Insurance Product Recommender")
 customer_id = st.number_input("Enter Customer ID (1–15):", min_value=1, max_value=15, step=1)
 
 # Function to fetch recommendations with retries
-def fetch_recommendations(customer_id, max_retries=3, delay=2):
+def fetch_recommendations(customer_id, max_retries=3, delay=3):
     for attempt in range(max_retries):
         try:
-            logging.debug(f"Attempt {attempt + 1}: Sending request to http://127.0.0.1:5000/api/recommend for customer {customer_id}")
+            logging.debug(f"Attempt {attempt + 1}: Sending request to {FLASK_API_URL} for customer {customer_id}")
             response = requests.post(
-                "http://127.0.0.1:5000/api/recommend",
+                FLASK_API_URL,
                 json={"customer_id": int(customer_id)},
-                timeout=10
+                timeout=15
             )
             response.raise_for_status()
             data = response.json()
@@ -170,7 +173,7 @@ if st.button("Get Recommendations"):
     except requests.exceptions.RequestException as e:
         st.markdown(
             f'<p class="error">Error fetching recommendations: {str(e)}<br>'
-            'Please ensure the Flask backend is running at http://127.0.0.1:5000 and no firewall is blocking the connection.</p>',
+            'Please ensure the Flask backend is running at {FLASK_API_URL}.</p>',
             unsafe_allow_html=True
         )
         logging.error(f"Failed to connect to Flask backend: {str(e)}")

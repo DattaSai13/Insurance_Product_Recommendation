@@ -8,10 +8,6 @@ __pycache__/
 venv/
 .env
 
-# Data files
-data/customers.csv
-data/products.csv
-
 # Generated files
 static/chart_data_*.json
 
