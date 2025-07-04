@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insurance Recommendation</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script>
+        // Fallback for Chart.js if CDN fails
+        window.Chart || document.write('<script src="/static/chart.min.js"><\/script>');
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Insurance Product Recommendation</h1>
+        <form id="recommendationForm" onsubmit="return getRecommendations(event)">
+            <label for="customer_id">Enter Customer ID (1-15):</label>
+            <input type="number" id="customer_id" name="customer_id" min="1" max="15" required>
+            <button type="submit">Get Recommendations</button>
+        </form>
+        <p id="error" class="error" style="display: none;"></p>
+        <h2 id="resultsHeader" style="display: none;">Recommendations</h2>
+        <ul id="results"></ul>
+        <canvas id="recommendationChart" width="400" height="200" style="display: none;"></canvas>
+    </div>
+    <script>
+        async function getRecommendations(event) {
+            event.preventDefault();
+            const customerId = document.getElementById('customer_id').value;
+            const errorElement = document.getElementById('error');
+            const resultsHeader = document.getElementById('resultsHeader');
+            const resultsList = document.getElementById('results');
+            const chartCanvas = document.getElementById('recommendationChart');
+
+            // Validate customer ID
+            if (customerId < 1 || customerId > 15) {
+                errorElement.textContent = 'Please enter a valid Customer ID between 1 and 15.';
+                errorElement.style.display = 'block';
+                resultsHeader.style.display = 'none';
+                resultsList.innerHTML = '';
+                chartCanvas.style.display = 'none';
+                return false;
+            }
+
+            // Clear previous results
+            errorElement.style.display = 'none';
+            resultsList.innerHTML = '';
+            chartCanvas.style.display = 'none';
+
+            try {
+                // Fetch recommendations via API
+                const response = await fetch('/api/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customer_id: parseInt(customerId) })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+
+                const data = await response.json();
+                if (data.error) {
+                    errorElement.textContent = `Error: ${data.error}`;
+                    errorElement.style.display = 'block';
+                    resultsHeader.style.display = 'none';
+                    resultsList.innerHTML = '';
+                    chartCanvas.style.display = 'none';
+                    return;
+                }
+
+                // Display recommendations
+                resultsHeader.textContent = `Recommendations for Customer ${data.customer_id}`;
+                resultsHeader.style.display = 'block';
+                data.recommendations.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = `${rec.product_name} (Score: ${rec.score.toFixed(2)}) - ${rec.explanation}`;
+                    resultsList.appendChild(li);
+                });
+
+                // Render chart with multiple datasets
+                chartCanvas.style.display = 'block';
+                const ctx = chartCanvas.getContext('2d');
+                // Check if chart instance exists before destroying
+                if (window.recommendationChart && typeof window.recommendationChart.destroy === 'function') {
+                    window.recommendationChart.destroy();
+                }
+                window.recommendationChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: data.chart_data,
+                    options: {
+                        scales: {
+                            y: { beginAtZero: true },
+                            x: { stacked: false }
+                        },
+                        plugins: {
+                            legend: { display: true },
+                            title: {
+                                display: true,
+                                text: 'Recommendation Metrics'
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching recommendations:', error);
+                errorElement.textContent = `Error fetching recommendations: ${error.message}`;
+                errorElement.style.display = 'block';
+                resultsHeader.style.display = 'none';
+                resultsList.innerHTML = '';
+                chartCanvas.style.display = 'none';
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>

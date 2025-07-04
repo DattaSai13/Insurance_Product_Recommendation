@@ -1,0 +1,28 @@
+{
+  "labels": [
+    "Term Life",
+    "Disability Insurance",
+    "Health Insurance"
+  ],
+  "datasets": [
+    {
+      "label": "Recommendation Scores",
+      "data": [
+        0.09260110517780511,
+        -0.1021063659231424,
+        -0.10760063966204815
+      ],
+      "backgroundColor": [
+        "#FF6384",
+        "#36A2EB",
+        "#FFCE56"
+      ],
+      "borderColor": [
+        "#FF6384",
+        "#36A2EB",
+        "#FFCE56"
+      ],
+      "borderWidth": 1
+    }
+  ]
+}

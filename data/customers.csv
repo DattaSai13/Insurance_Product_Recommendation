@@ -1,0 +1,16 @@
+customer_id,age,income,marital_status,has_children,health_condition,risk_tolerance,recent_life_event
+1,25,50000,Single,0,Good,High,None
+2,35,80000,Married,1,Average,Medium,New Child
+3,45,120000,Married,2,Poor,Low,Job Change
+4,30,65000,Single,0,Good,Medium,Marriage
+5,50,100000,Divorced,1,Average,Low,None
+6,28,70000,Married,0,Good,Medium,Job Change
+7,22,30000,Single,0,Good,High,None
+8,65,60000,Married,0,Poor,Low,Retirement
+9,40,90000,Married,2,Good,Medium,New Child
+10,55,110000,Divorced,0,Average,Low,Retirement
+11,27,45000,Single,0,Good,High,Marriage
+12,38,85000,Married,1,Poor,Medium,None
+13,60,70000,Married,0,Average,Low,Retirement
+14,33,60000,Single,0,Good,Medium,Job Change
+15,29,55000,Single,0,Good,High,None

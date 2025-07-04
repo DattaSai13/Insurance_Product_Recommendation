@@ -1,0 +1,9 @@
+product_id,product_name,coverage_type,premium,risk_level,recommended_age_min,recommended_age_max,coverage_limit,description
+101,Term Life,Life,500,Low,20,50,500000,Provides affordable life coverage for a fixed term
+102,Whole Life,Life,1200,Medium,30,60,1000000,Lifelong coverage with savings component
+103,Health Insurance,Health,800,Low,18,65,250000,Comprehensive medical coverage for hospital and outpatient
+104,Critical Illness,Health,600,Medium,25,55,200000,Coverage for critical illnesses like cancer
+105,Disability Insurance,Income,700,Medium,25,60,150000,Income protection in case of disability
+106,Universal Life,Life,1000,Medium,25,65,750000,Flexible life insurance with investment options
+107,Long-Term Care,Health,900,Low,50,80,300000,Coverage for long-term care services
+108,Accident Insurance,Health,400,Low,18,60,100000,Coverage for accidental injuries

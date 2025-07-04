@@ -1,0 +1,38 @@
+{
+  "labels": [
+    "Health Insurance",
+    "Disability Insurance"
+  ],
+  "datasets": [
+    {
+      "label": "Recommendation Scores",
+      "data": [
+        -0.23262377435213558,
+        -0.24515974566182824
+      ],
+      "backgroundColor": "rgba(255, 99, 132, 0.5)",
+      "borderColor": "rgba(255, 99, 132, 1)",
+      "borderWidth": 1
+    },
+    {
+      "label": "Annual Premium ($)",
+      "data": [
+        9600.0,
+        8400.0
+      ],
+      "backgroundColor": "rgba(54, 162, 235, 0.5)",
+      "borderColor": "rgba(54, 162, 235, 1)",
+      "borderWidth": 1
+    },
+    {
+      "label": "Coverage Limit ($100K)",
+      "data": [
+        2.5,
+        1.5
+      ],
+      "backgroundColor": "rgba(255, 206, 86, 0.5)",
+      "borderColor": "rgba(255, 206, 86, 1)",
+      "borderWidth": 1
+    }
+  ]
+}

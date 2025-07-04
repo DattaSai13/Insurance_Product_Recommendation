@@ -1,0 +1,17 @@
+{
+  "customer_id": 1,
+  "recommendations": [
+    {
+      "product_id": 105,
+      "product_name": "Disability Insurance",
+      "score": -0.06389434827881882,
+      "explanation": "Recommended for Student/Young Single life stage"
+    },
+    {
+      "product_id": 103,
+      "product_name": "Health Insurance",
+      "score": -0.19832433627672916,
+      "explanation": "Recommended for Student/Young Single life stage"
+    }
+  ]
+}
